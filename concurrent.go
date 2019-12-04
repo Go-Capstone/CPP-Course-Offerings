@@ -27,7 +27,7 @@ func MakeRequest(url string, ch chan<-string) {
   resp, _ := http.Get(url)
   secs := time.Since(start).Seconds()
   body, _ := ioutil.ReadAll(resp.Body)
-  ch <- fmt.Sprintf("%.2f elapsed with response length: %d %s", secs, len(body), url)
+  ch <- fmt.Sprintf("%.9fs elapsed with response length: %d %s", secs, len(body), url)
 }
 
 func MakeSingleRequest(){
@@ -75,14 +75,17 @@ func MakeConccurentRequests() {
   for range urls{
     fmt.Println(<-ch)
   }
-  fmt.Printf("%.2fs elapsed\n", time.Since(start).Seconds())
+  
+  fmt.Printf("\n%.9fs elapsed\n", time.Since(start).Seconds())
+  
 }
 
 func main() {
     
 	fmt.Println()
     var choice int
-    for ok := true; ok; ok = (choice != 4) {
+    
+   for ok := true; ok; ok = (choice != 4) {
      fmt.Println("1. Get single course\n2. Get all courses\n3. Make concurrent request\n4. Quit")
      fmt.Scan(&choice) 
 	 
@@ -101,5 +104,5 @@ func main() {
 		MakeConccurentRequests()
 		fmt.Println()
 	 }
-   }
+    }
 }

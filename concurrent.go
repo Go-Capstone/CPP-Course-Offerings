@@ -44,11 +44,16 @@ func MakeSingleRequest(){
 }
 
 func GetAllCourses(){
-  url := baseURL + "courses"
-  resp, _ := http.Get(url)
-  body, _ := ioutil.ReadAll(resp.Body)
+ 
+  classes := [18]string{"cs1300", "cs1400", "cs2400", "cs2450", "cs2520", "cs2560", "cs2600", "cs2640", "cs2990", "cs3010", "cs3110", "cs3310", "cs3520", "cs3560", "cs3650", "cs4080", "cs4310", "cs4800"}
+  
+  for i := 0; i < 18; i++{
+	url := baseURL + "courses/" + classes[i]
+    resp, _ := http.Get(url)
+    body, _ := ioutil.ReadAll(resp.Body) 
 
-  //call the PrintCourseData method for each course
+  PrintCourseData(body)
+  }
 }
 
 func PrintCourseData(body []byte) {
@@ -61,7 +66,7 @@ func PrintCourseData(body []byte) {
 }
 
 func MakeConccurentRequests() {
-  urls := [3]string{"http://localhost:8080/", "http://localhost:8080/courses", "http://localhost:8080/course/cs4080"}
+  urls := [3]string{"http://localhost:8080/courses/cs1300", "http://localhost:8080/courses/cs3560", "http://localhost:8080/course/cs4080"}
   start := time.Now()
   ch := make(chan string)
   for _,url := range urls{
@@ -74,12 +79,27 @@ func MakeConccurentRequests() {
 }
 
 func main() {
-
-  //add menu options here 
-
-  //if single class, make single request
-  //if all courses, get all courses
-  //if concurrent, make concurrent requests
-  MakeSingleRequest()
-  MakeConccurentRequests()
+    
+	fmt.Println()
+    var choice int
+    for ok := true; ok; ok = (choice != 4) {
+     fmt.Println("1. Get single course\n2. Get all courses\n3. Make concurrent request\n4. Quit")
+     fmt.Scan(&choice) 
+	 
+	 if(choice == 1){
+	    fmt.Println()
+	    MakeSingleRequest()
+	    fmt.Println()
+	 }
+	 if(choice == 2){
+	    fmt.Println()
+	    GetAllCourses()
+	    fmt.Println()
+	 }
+	 if(choice == 3){
+	    fmt.Println()
+		MakeConccurentRequests()
+		fmt.Println()
+	 }
+   }
 }
